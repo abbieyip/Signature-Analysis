@@ -1,0 +1,12 @@
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\bin\Debug\netcoreapp3.1\SignatureAnalysis.exe
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\bin\Debug\netcoreapp3.1\SignatureAnalysis.deps.json
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\bin\Debug\netcoreapp3.1\SignatureAnalysis.runtimeconfig.json
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\bin\Debug\netcoreapp3.1\SignatureAnalysis.runtimeconfig.dev.json
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\bin\Debug\netcoreapp3.1\SignatureAnalysis.dll
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\bin\Debug\netcoreapp3.1\SignatureAnalysis.pdb
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\obj\Debug\netcoreapp3.1\SignatureAnalysis.AssemblyInfoInputs.cache
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\obj\Debug\netcoreapp3.1\SignatureAnalysis.AssemblyInfo.cs
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\obj\Debug\netcoreapp3.1\SignatureAnalysis.csproj.CoreCompileInputs.cache
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\obj\Debug\netcoreapp3.1\SignatureAnalysis.dll
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\obj\Debug\netcoreapp3.1\SignatureAnalysis.pdb
+C:\Users\abbie\source\repos\SignatureAnalysis\SignatureAnalysis\obj\Debug\netcoreapp3.1\SignatureAnalysis.genruntimeconfig.cache
