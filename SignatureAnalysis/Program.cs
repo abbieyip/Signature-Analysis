@@ -25,6 +25,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Security.Cryptography;
+using System.Globalization;
 
 namespace SignatureAnalysis
 {
@@ -58,7 +59,7 @@ namespace SignatureAnalysis
                 }
             }
 
-            Console.WriteLine("Enter a file path:");
+            Console.WriteLine("Enter a csv file path:");
             string path = Console.ReadLine();
             // entered invalid file path
             if (!File.Exists(path))
@@ -100,6 +101,7 @@ namespace SignatureAnalysis
             {
                 string signature = processFile(path, csvFile);
                 string hashValue = findHash(path);
+                fillCSV(csvFile, path, signature, hashValue);
 
             }
 
@@ -138,22 +140,23 @@ namespace SignatureAnalysis
                     buffer = br.ReadBytes(4);
                 }
             }
+            // converts bits into desired string format
             string bitStr = BitConverter.ToString(buffer);
             string signature = bitStr.Replace("-", "");
             Console.WriteLine(signature);
+            // pdf signature
             if (signature.Equals("25504446")) {
-                Console.WriteLine("PDFFF");
                 return "PDF";
             }
+            // jpg signature
             else if ((signature.Remove(4)).Equals("FFD8"))
             {
-                Console.WriteLine("JPG!!!");
                 return "JPG";
             }
+            // unsupported file type
             else
             {
-                Console.WriteLine("different file type");
-                return "Invalid";
+                return "Unsupported file type";
             }
         }
 
@@ -187,7 +190,26 @@ namespace SignatureAnalysis
         public void fillCSV(string csvPath, string filePath, string fileType,
             string hashValue)
         {
+            // seperates columns
+            string seperator = ",";
+            StringBuilder sb = new StringBuilder();
 
+            // creates new row filled with file's properties
+            string[][] fileProperties = new string[][]
+            {
+                new string[]
+                {
+                    filePath, fileType, hashValue
+                }
+            };
+
+            // appends file properties to the given csv file 
+            for (int i = 0; i < fileProperties.GetLength(0); i++)
+            {
+                sb.AppendLine(string.Join(seperator, fileProperties[i]));
+
+                File.AppendAllText(csvPath, sb.ToString());
+            }
         }
     }
 
