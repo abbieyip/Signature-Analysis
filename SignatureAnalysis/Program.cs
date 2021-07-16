@@ -22,12 +22,18 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Collections;
+using System.Security.Cryptography;
 
 namespace SignatureAnalysis
 {
     class Program
     {
+        string directoryMsg = "Directory does not exist. " +
+            "Please enter a valid directory.";
+        string fileMsg = "File does not exist. " +
+            "Please enter a valid file path.";
         /**
          * Name: Main method
          * Parameters: None
@@ -37,33 +43,35 @@ namespace SignatureAnalysis
          */
         static void Main(string[] args)
         {
+            Program pg = new Program();
             Console.WriteLine("Enter a directory:");
             string dir = Console.ReadLine();
+            // entered invalid directory
             if (!Directory.Exists(dir))
             {
-                Console.WriteLine("Directory does not exist. Please enter a valid directory.");
+                Console.WriteLine(pg.directoryMsg);
                 dir = Console.ReadLine();
                 while (!Directory.Exists(dir))
                 {
-                    Console.WriteLine("Directory does not exist. Please enter a valid directory.");
+                    Console.WriteLine(pg.directoryMsg);
                     dir = Console.ReadLine();
                 }
             }
 
             Console.WriteLine("Enter a file path:");
             string path = Console.ReadLine();
+            // entered invalid file path
             if (!File.Exists(path))
             {
-                Console.WriteLine("File does not exist. Please enter a valid file path.");
+                Console.WriteLine(pg.fileMsg);
                 path = Console.ReadLine();
                 while (!File.Exists(path))
                 {
-                    Console.WriteLine("File does not exist. Please enter a valid file path.");
+                    Console.WriteLine(pg.fileMsg);
                     path = Console.ReadLine();
                 }
             }
 
-            Program pg = new Program();
             Console.WriteLine("Include subdirectories? (Y/N)");
             if ((Console.ReadLine()).Equals("Y"))
             {
@@ -76,29 +84,111 @@ namespace SignatureAnalysis
             }
         }
 
-        public void processDirectory(string directory, string csvFile, bool sub)
+        /**
+         * Name: processDirectory
+         * Parameters: directory name, csvFile path, boolean to include subdir
+         * Description: Iterates through given directory's files and optional
+         * subdirectories
+         * Return: N/A
+         */
+        public void processDirectory(string directory, string csvFile,
+            bool sub)
         {
             string[] files = Directory.GetFiles(directory);
+            // iterates through each file
             foreach (string path in files)
             {
-                processFile(path, csvFile);
+                string signature = processFile(path, csvFile);
+                string hashValue = findHash(path);
+
             }
 
+            // checks whether to enter subdirectories
             if (sub == true)
             {
                 string[] directories = Directory.GetDirectories(directory);
+                // iterates through each subdirectory
                 foreach (string subdir in directories)
                 {
+                    // recursive call
                     processDirectory(subdir, csvFile, true);
                 }
             }
 
         }
 
-        public void processFile(string filePath, string csvFile)
+        /**
+         * Name: processFile
+         * Parameters: file path name, csv file path name
+         * Description: Determines using the file signature if the file is a 
+         * PDF or a JPG
+         * Return: N/A
+         */
+        public string processFile(string filePath, string csvFile)
         {
-            Console.WriteLine("it works!");
+            // creates stream to open and read file
+            FileStream fs = File.Open(filePath, FileMode.Open, FileAccess.Read);
+            byte[] buffer = new byte[8];
+            using (fs)
+            {
+                BinaryReader br = new BinaryReader(fs);
+                using (br)
+                {
+                    // reads first four bytes of the file
+                    buffer = br.ReadBytes(4);
+                }
+            }
+            string bitStr = BitConverter.ToString(buffer);
+            string signature = bitStr.Replace("-", "");
+            Console.WriteLine(signature);
+            if (signature.Equals("25504446")) {
+                Console.WriteLine("PDFFF");
+                return "PDF";
+            }
+            else if ((signature.Remove(4)).Equals("FFD8"))
+            {
+                Console.WriteLine("JPG!!!");
+                return "JPG";
+            }
+            else
+            {
+                Console.WriteLine("different file type");
+                return "Invalid";
+            }
+        }
+
+        /**
+         * Name: findHash
+         * Parameters: file path name
+         * Description: Given a file path, finds the MD5 hash of the file
+         * contents
+         * Return: MD5 Hash in string format
+         */
+        public string findHash(string path)
+        {
+            MD5 mD5 = MD5.Create();
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            byte[] hashData = mD5.ComputeHash(fileBytes);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hashData.Length; i++)
+            {
+                sb.Append((hashData[i]).ToString());
+            }
+            return sb.ToString();
+        }
+
+        /**
+         * Name: fillCSV
+         * Parameters: csv file path, file path, file type, file hash
+         * Description: Fills the given csv file with the given file's 
+         * attributes
+         * Return: N/A
+         */
+        public void fillCSV(string csvPath, string filePath, string fileType,
+            string hashValue)
+        {
 
         }
     }
+
 }
